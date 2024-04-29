@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create post_tag table
+      author: Nariman Sayilov
+      changes:
+        - createTable:
+            tableName: post_tag
+            columns:
+              - column:
+                  name: post_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: tag_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+        - addForeignKeyConstraint:
+            baseTableName: post_tag
+            baseColumnNames: post_id
+            referencedTableName: posts
+            referencedColumnNames: id
+            constraintName: fk_post_tag_posts
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: post_tag
+            baseColumnNames: tag_id
+            referencedTableName: tags
+            referencedColumnNames: id
+            constraintName: fk_post_tag_tags
+            onDelete: CASCADE
