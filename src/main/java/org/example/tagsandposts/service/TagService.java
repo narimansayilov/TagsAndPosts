@@ -20,30 +20,30 @@ public class TagService {
 
 
     public void addTag(TagRequest request){
-        log.info("ActionLog.TagService.save.start for {}", request);
+        log.info("ActionLog.save.start for {}", request);
         tagRepository.save(TagMapper.INSTANCE.requestToEntity(request));
-        log.info("ActionLog.TagService.save.end for {}", request);
+        log.info("ActionLog.save.end for {}", request);
     }
 
     public List<TagResponse> getAll(){
-        log.info("ActionLog.TagService.getAll start");
+        log.info("ActionLog.getAll start");
         return TagMapper.INSTANCE.entitiesToResponses(tagRepository.findAll());
     }
 
     public TagResponse getById(Long id){
-        log.info("ActionLog.TagService.getById start for {}", id);
+        log.info("ActionLog.getById start for {}", id);
         return TagMapper.INSTANCE.entityToResponse(tagRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("TAG_NOT_FOUND")));
     }
 
     public void deleteById(Long id){
-        log.info("ActionLog.TagService.deleteById start for {}", id);
+        log.info("ActionLog.deleteById start for {}", id);
         tagRepository.deleteById(id);
-        log.info("ActionLog.TagService.deleteById end for {}", id);
+        log.info("ActionLog.deleteById end for {}", id);
     }
 
     public TagResponse editById(Long id, TagRequest request){
-        log.info("ActionLog.TagService.editById start for {}", id);
+        log.info("ActionLog.editById start for {}", id);
         TagEntity entity = tagRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("TAG_NOT_FOUND"));
         TagMapper.INSTANCE.mapRequestToEntity(entity, request);
@@ -52,7 +52,7 @@ public class TagService {
     }
 
     public TagResponse updateName(Long id, TagRequest request){
-        log.info("ActionLog.TagService.updateName start for {}", id);
+        log.info("ActionLog.updateName start for {}", id);
         TagEntity entity = tagRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("TAG_NOT_FOUND"));
         TagMapper.INSTANCE.mapRequestToEntity(entity, request);
