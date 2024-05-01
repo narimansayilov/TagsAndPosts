@@ -8,9 +8,10 @@ import org.example.tagsandposts.model.dto.request.PostRequest
 import spock.lang.Specification
 
 class PostMapperTest extends Specification {
-    def random = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build()
-    void setup() {
+    def random
 
+    void setup() {
+        random = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build()
     }
 
     def "RequestToEntity"() {

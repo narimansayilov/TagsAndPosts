@@ -12,7 +12,7 @@ class TagMapperTest extends Specification {
     def "EntityToResponse"() {
     }
 
-    def entitiesToResponses() {
+    def "entitiesToResponses"() {
     }
 
     def "MapRequestToEntity"() {
