@@ -16,20 +16,38 @@ import static org.springframework.http.HttpStatus.NOT_FOUND
 import static org.springframework.http.MediaType.APPLICATION_JSON
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 
 class PostControllerTest extends Specification {
-    MockMvc mockMvc
-    PostService postService
-    def mapper = new ObjectMapper().registerModule(new JavaTimeModule())
-    def random = EnhancedRandomBuilder.aNewEnhancedRandom()
+    private def mapper
+    private def random
+    private MockMvc mockMvc
+    private def postController
+    private PostService postService
 
     void setup() {
         postService = Mock()
-        def postController = new PostController(postService)
+        postController = new PostController(postService)
+        random = EnhancedRandomBuilder.aNewEnhancedRandom()
+        mapper = new ObjectMapper().registerModule(new JavaTimeModule())
         mockMvc = MockMvcBuilders.standaloneSetup(postController).setControllerAdvice(new ErrorHandler()).build()
     }
 
     def "AddPost 200"() {
+        given:
+        def url = "v1/posts"
+        def postRequestJson = '''
+             {
+                 "title" = "This is test title",
+                 "content" = "This is test content"
+             } 
+        '''
+
+        when:
+        def response = mockMvc
+                .perform (post(url)
+                        .contentType(APPLICATION_JSON))
+                .andReturn().response
 
     }
 
@@ -113,24 +131,6 @@ class PostControllerTest extends Specification {
         and:
         response.status == HttpStatus.NO_CONTENT.value()
     }
-
-//    def "DeleteById"() {
-//        given:
-//        def id = 1L
-//        def url = "http://example.com/v1/posts/$id"
-//        def restTemplate = new RestTemplate()
-//
-//        when:
-//        ResponseEntity<Void> response = restTemplate.exchange(
-//                url,
-//                HttpMethod.DELETE,
-//                null,
-//                Void.class
-//        )
-//
-//        then:
-//        response.statusCode == HttpStatus.NO_CONTENT
-//    }
 
     def "EditById"() {
 

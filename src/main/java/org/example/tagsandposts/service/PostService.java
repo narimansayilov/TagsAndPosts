@@ -29,10 +29,9 @@ public class PostService {
     }
 
     public void addPost(PostRequest request) {
-        log.info("ActionLog.PostService.save.start for {}", request.getTitle());
+        log.info("ActionLog.save.start for {}", request.getTitle());
         List<TagEntity> tagEntities = tagRepository.findAllById(request.getTagIds());
         PostCheckingResponse postCheckingResponse = postCheckingClient.check(request.getTitle());
-        log.info(postCheckingResponse.toString());
         if(!postCheckingResponse.getSuccess()){
             PostEntity postEntity = PostMapper.INSTANCE.requestToEntity(request, tagEntities);
             postRepository.save(postEntity);
@@ -41,41 +40,43 @@ public class PostService {
     }
 
     public List<PostResponse> getAll() {
-        log.info("ActionLog.PostService.getAll.start");
+        log.info("ActionLog.getAll.start");
         return PostMapper.INSTANCE.entitiesToResponses(postRepository.findAll());
     }
 
     public PostResponse getById(Long id) {
-        log.info("ActionLog.PostService.getById.start for {}", id);
+        log.info("ActionLog.getById.start for {}", id);
         return PostMapper.INSTANCE.entityToResponse(postRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("POST_NOT_FOUND")));
+                .orElseThrow(() -> {
+                    log.info("ActionLog.NotFoundException for {}", id);
+                    return new NotFoundException("POST_NOT_FOUND");
+                }));
     }
 
     public void deleteById(Long id) {
-        log.info("ActionLog.PostService.deleteById.start for {}", id);
+        log.info("ActionLog.deleteById.start for {}", id);
                 postRepository.deleteById(id);
     }
 
     public PostResponse editById(Long id, PostRequest request) {
-        log.info("ActionLog.PostService.editById.start for {}", id);
+        log.info("ActionLog.editById.start for {}", id);
         PostEntity entity = postRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("POST_NOT_FOUND"));
+                .orElseThrow(() -> {
+                    log.info("ActionLog.NotFoundException for {}", id);
+                    return new NotFoundException("POST_NOT_FOUND");
+                });
         PostMapper.INSTANCE.mapRequestToEntity(entity, request);
         postRepository.save(entity);
         return PostMapper.INSTANCE.entityToResponse(entity);
     }
 
     public PostResponse editContent(Long id, PostRequest request) {
-        log.info("ActionLog.PostService.editContent.start for {}", id);
+        log.info("ActionLog.editContent.start for {}", id);
         PostEntity entity = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("POST_NOT_FOUND"));
         PostMapper.INSTANCE.mapRequestToEntity(entity, request);
         postRepository.save(entity);
         return PostMapper.INSTANCE.entityToResponse(entity);
-    }
-
-    public PostCheckingClient getPostCheckingClient() {
-        return postCheckingClient;
     }
 }
