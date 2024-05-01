@@ -34,7 +34,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     ExceptionResponse handler(Exception exception){
         log.error("Exception ", exception);
-        return new ExceptionResponse("UNEXPECETED_EXCEPTION");
+        return new ExceptionResponse("UNEXPECTED_EXCEPTION");
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
