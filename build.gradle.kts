@@ -33,6 +33,7 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:3.11.2")
     testImplementation("org.spockframework:spock-spring:2.3-groovy-4.0")
     testImplementation("io.github.benas:random-beans:3.9.0")
+    testImplementation("org.springframework.security:spring-security-test")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
@@ -54,6 +55,9 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation(kotlin("script-runtime"))
+
+    // Security
+    implementation("org.springframework.boot:spring-boot-starter-security:3.2.4")
 
 }
 
