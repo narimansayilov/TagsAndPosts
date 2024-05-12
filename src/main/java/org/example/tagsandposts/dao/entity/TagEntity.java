@@ -1,7 +1,10 @@
 package org.example.tagsandposts.dao.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +14,9 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "tags", schema = "social_network")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
