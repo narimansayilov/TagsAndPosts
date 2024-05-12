@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${url}
-    username: ${username}
-    password: ${password}
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,4 +13,12 @@ spring:
   liquibase:
     change-log: liquibase/changelog-master.yaml
     default-schema: social_network
+  security:
+    user:
+      name: ${security.admin.name}
+      password: ${security.admin.password}
+      roles: ${security.admin.roles}
+springdoc:
+  show-login-endpoint: true
+
 
