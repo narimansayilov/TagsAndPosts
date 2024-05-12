@@ -1,9 +1,18 @@
 package org.example.tagsandposts.model.exception;
 
-public class ExceptionResponse {
-    public String code;
+import lombok.Getter;
+import lombok.Setter;
 
-    public ExceptionResponse(String code) {
+import java.time.LocalDateTime;
+
+@Getter
+public class ExceptionResponse {
+
+    private final String message;
+    private final String code;
+
+    public ExceptionResponse(String message, String code) {
+        this.message = message;
         this.code = code;
     }
 }
