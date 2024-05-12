@@ -14,5 +14,5 @@ public class PostResponse {
     private String title;
     private String content;
     private List<TagResponse> tags;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }
