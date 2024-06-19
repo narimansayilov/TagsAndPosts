@@ -1,5 +1,6 @@
 package org.example.tagsandposts.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.tagsandposts.client.PostCheckingClient;
 import org.example.tagsandposts.dao.entity.PostEntity;
@@ -11,22 +12,18 @@ import org.example.tagsandposts.model.client.postchecking.PostCheckingResponse;
 import org.example.tagsandposts.model.dto.request.PostRequest;
 import org.example.tagsandposts.model.dto.response.PostResponse;
 import org.example.tagsandposts.model.exception.NotFoundException;
+import org.example.tagsandposts.model.exception.PostException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final PostCheckingClient postCheckingClient;
-
-    public PostService(PostRepository postRepository, TagRepository tagRepository, PostCheckingClient postCheckingClient) {
-        this.postRepository = postRepository;
-        this.tagRepository = tagRepository;
-        this.postCheckingClient = postCheckingClient;
-    }
 
     public void addPost(PostRequest request) {
         log.info("ActionLog.save.start for {}", request.getTitle());
@@ -36,6 +33,9 @@ public class PostService {
             PostEntity postEntity = PostMapper.INSTANCE.requestToEntity(request, tagEntities);
             postRepository.save(postEntity);
             log.info("ActionLog.save.end for {}", request.getTitle());
+        } else {
+            log.info("ActionLog.save.error for {}", request.getTitle());
+            throw new PostException("POST_ALREADY_EXISTS");
         }
     }
 
@@ -49,7 +49,7 @@ public class PostService {
         return PostMapper.INSTANCE.entityToResponse(postRepository
                 .findById(id)
                 .orElseThrow(() -> {
-                    log.info("ActionLog.NotFoundException for {}", id);
+                    log.info("ActionLog.getById.NotFoundException for {}", id);
                     return new NotFoundException("POST_NOT_FOUND");
                 }));
     }
@@ -63,7 +63,7 @@ public class PostService {
         log.info("ActionLog.editById.start for {}", id);
         PostEntity entity = postRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.info("ActionLog.NotFoundException for {}", id);
+                    log.info("ActionLog.editById.NotFoundException for {}", id);
                     return new NotFoundException("POST_NOT_FOUND");
                 });
         PostMapper.INSTANCE.mapRequestToEntity(entity, request);

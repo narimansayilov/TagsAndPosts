@@ -1,7 +1,6 @@
 package org.example.tagsandposts.mapper
 
 import io.github.benas.randombeans.EnhancedRandomBuilder
-import net.bytebuddy.build.CachedReturnPlugin.Enhance
 import org.example.tagsandposts.dao.entity.PostEntity
 import org.example.tagsandposts.dao.entity.TagEntity
 import org.example.tagsandposts.model.dto.request.PostRequest
@@ -16,15 +15,17 @@ class PostMapperTest extends Specification {
 
     def "RequestToEntity"() {
         given:
-        def postRequest = random.nextObject(PostRequest)
-//        def tagEntities = (1..5).collect {
-//            random.nextObject(TagEntity)
-//        }
-        def tagEntities = [
+        PostRequest postRequest = random.nextObject(PostRequest)
+        List<TagEntity> tagEntities = [
                 random.nextObject(TagEntity),
                 random.nextObject(TagEntity),
                 random.nextObject(TagEntity)
         ]
+
+//        def tagEntities = (1..3).collect {
+//            random.nextObject(TagEntity)
+//        }
+
 
         when:
         def postEntity = PostMapper.INSTANCE.requestToEntity(postRequest, tagEntities)
@@ -36,7 +37,7 @@ class PostMapperTest extends Specification {
 
     def "EntityToResponse"() {
         given:
-        def postEntity = random.nextObject(PostEntity)
+        PostEntity postEntity = random.nextObject(PostEntity)
 
         when:
         def postResponse = PostMapper.INSTANCE.entityToResponse(postEntity)
@@ -49,7 +50,7 @@ class PostMapperTest extends Specification {
 
     def entitiesToResponses() {
         given:
-        def postEntities = [
+        List<PostEntity> postEntities = [
                 random.nextObject(PostEntity),
                 random.nextObject(PostEntity),
                 random.nextObject(PostEntity)
@@ -60,9 +61,31 @@ class PostMapperTest extends Specification {
 
         then:
         postResponses.size() == postEntities.size()
+        postResponses.every { response ->
+            postEntities.any { entity ->
+                entity.id == response.id &&
+                        entity.title == response.title &&
+                        entity.content == response.content &&
+                        entity.createdAt == response.createdAt
+            }
+        }
     }
 
     def "MapRequestToEntity"() {
+        given:
+        PostRequest request = random.nextObject(PostRequest)
+        PostEntity entity = new PostEntity()
 
+        when:
+        PostMapper.INSTANCE.mapRequestToEntity(entity, request)
+
+        then:
+        entity.title == request.title
+        entity.content == request.content
+        entity.tags.every { entityTag ->
+            request.tagIds.any { requestTag ->
+                requestTag.id == entityTag.id
+            }
+        }
     }
 }
